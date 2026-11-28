@@ -1,0 +1,46 @@
+// archivo: apps/api/prisma/schema.prisma
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Empresa {
+  id                 String   @id @default(uuid(7)) @db.Uuid
+  nit                String   @unique @db.VarChar(15)
+  digitoVerificacion String   @map("digito_verificacion") @db.Char(1)
+  razonSocial        String   @map("razon_social") @db.VarChar(200)
+  nombreComercial    String?  @map("nombre_comercial") @db.VarChar(200)
+  arlCodigo          String?  @map("arl_codigo") @db.VarChar(10)
+  activa             Boolean  @default(true)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  sedes Sede[]
+
+  @@map("empresas")
+}
+
+model Sede {
+  id                     String   @id @default(uuid(7)) @db.Uuid
+  empresaId              String   @map("empresa_id") @db.Uuid
+  nombre                 String   @db.VarChar(120)
+  direccion              String   @db.VarChar(200)
+  municipioCodigo        String   @map("municipio_codigo") @db.Char(5)
+  cajaCompensacionCodigo String?  @map("caja_compensacion_codigo") @db.VarChar(10)
+  esPrincipal            Boolean  @default(false) @map("es_principal")
+  activa                 Boolean  @default(true)
+  createdAt              DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Restrict)
+
+  @@unique([empresaId, nombre])
+  @@index([empresaId])
+  @@map("sedes")
+}

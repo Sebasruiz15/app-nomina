@@ -1,0 +1,29 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+coverage/
+
+# SECRETOS: nunca a Git
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Archivos subidos (incapacidades, PDFs)
+uploads/
+
+# Logs y sistema
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+*.tsbuildinfo
+
+# Cliente de Prisma generado
+apps/api/src/generated/
